@@ -1,10 +1,20 @@
+#ifndef CHIP8
+#define CHIP8
+
 #include <stdint.h>
 
 #define MEMSIZE 4096
 
+// 8 bit memory array with 4096 allocated bits
 uint8_t memory[MEMSIZE];
-uint8_t stack[16];
 
+// stack to handle 16 or 12-bit integers
+uint16_t stack[16];
+
+// graphics array hardcoded to chip-8 specifications
+uint8_t graphics[64 * 32];
+
+// 8-bit fontset (bytes)
 uint8_t fontset[80] = {
     0xF0, 0x90, 0x90, 0x90, 0xF0, // 0
     0x20, 0x60, 0x20, 0x20, 0x70, // 1
@@ -24,3 +34,10 @@ uint8_t fontset[80] = {
     0xF0, 0x80, 0xF0, 0x80, 0x80  // F
 };
 
+// 16-bit index register
+uint16_t ir;
+
+// 16-bit program counter
+uint16_t pc;
+
+#endif

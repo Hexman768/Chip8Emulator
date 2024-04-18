@@ -4,6 +4,8 @@
 #include <stdint.h>
 
 #define MEMSIZE 4096
+#define SC_WIDTH 64
+#define SC_HEIGHT 32
 
 // 8 bit memory array with 4096 allocated bits
 uint8_t memory[MEMSIZE];
@@ -12,7 +14,7 @@ uint8_t memory[MEMSIZE];
 uint16_t stack[16];
 
 // graphics array hardcoded to chip-8 specifications
-uint8_t graphics[64 * 32];
+uint8_t graphics[SC_WIDTH * SC_HEIGHT];
 
 // 8-bit fontset (bytes)
 uint8_t fontset[80] = {

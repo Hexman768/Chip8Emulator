@@ -10,6 +10,8 @@
 // 8 bit memory array with 4096 allocated bits
 uint8_t memory[MEMSIZE];
 
+uint8_t v[16];
+
 // stack to handle 16 or 12-bit integers
 uint16_t stack[16];
 
@@ -41,5 +43,8 @@ uint16_t ir;
 
 // 16-bit program counter
 uint16_t pc;
+
+// 16-bit op code
+uint16_t opcode;
 
 #endif

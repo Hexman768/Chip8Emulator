@@ -2,14 +2,6 @@
 #include <string.h>
 #include "chip8.h"
 
-uint8_t get_high_nibble(uint8_t byte) {
-    return ((byte >> 4) & 0xF);
-}
-
-uint8_t get_low_nibble(uint8_t byte) {
-    return ((byte >> 0) & 0xF);
-}
-
 void init() {
     pc = 0x202;
     memcpy(memory, fontset, 80*sizeof(uint8_t));
@@ -22,10 +14,17 @@ void clear_screen() {
 }
 
 void mem_dump() {
-    for (int i = 0; i < 4096; i++) {
-        for (int j = 0; j < 8; j++) {
-            i += j;
-            printf("%x", memory[i]);
+    printf("\n--------Memory Dump------------\n");
+    uint16_t addr = 0x200;
+    for (int i = 0; i < 16; i++) {
+        uint16_t ascii = addr;
+        printf("0x%x    ", addr);
+        for (int j = 0; j < 16; j++) {
+            if (memory[addr] <= 0xF) {
+                printf("0");
+            }
+            printf("%x ", memory[addr]);
+            addr++;
         }
         printf("\n");
     }
@@ -115,7 +114,8 @@ int main(int argc, char **argv) {
     opcode = memory[pc] << 8 | memory[pc + 1];
     printf("0x200: %x, 0x201: %x\n", memory[pc], memory[pc + 1]);
     printf("opcode: 0x%x\n", opcode);
-    decode(memory[pc], memory[pc + 1]);
+    //decode(memory[pc], memory[pc + 1]);
+    mem_dump();
     return 0;
 }
 

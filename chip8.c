@@ -14,17 +14,27 @@ void clear_screen() {
 }
 
 void mem_dump() {
-    printf("\n--------Memory Dump------------\n");
+    printf("\nAddr- ------------------Memory Dump------------------ ------------Symbol-------------\n");
     uint16_t addr = 0x200;
     for (int i = 0; i < 16; i++) {
         uint16_t ascii = addr;
-        printf("0x%x    ", addr);
+        printf("0x%x ", addr);
+        // print hex values
         for (int j = 0; j < 16; j++) {
             if (memory[addr] <= 0xF) {
                 printf("0");
             }
             printf("%x ", memory[addr]);
             addr++;
+        }
+        for (int j = 0; j < 16; j++) {
+            uint8_t val = memory[ascii];
+            if (val >= 32 && val <= 126) {
+                printf("%c ", memory[ascii]);
+            } else {
+                printf(". ");
+            }
+            ascii++;
         }
         printf("\n");
     }
@@ -108,12 +118,7 @@ int main(int argc, char **argv) {
     load_ROM(argv[1]);
     //mem_dump();
 
-    for (int i = 512; i < 612; i++) {
-        printf("%d: 0x%x\n", i, memory[i]);
-    }
     opcode = memory[pc] << 8 | memory[pc + 1];
-    printf("0x200: %x, 0x201: %x\n", memory[pc], memory[pc + 1]);
-    printf("opcode: 0x%x\n", opcode);
     //decode(memory[pc], memory[pc + 1]);
     mem_dump();
     return 0;

@@ -115,7 +115,9 @@ int main(int argc, char **argv) {
     init();
 
     // read ROM into chip-8 memory
-    load_ROM(argv[1]);
+    if (load_ROM(argv[1]) == 0) {
+        return 1;
+    }
     //mem_dump();
 
     opcode = memory[pc] << 8 | memory[pc + 1];

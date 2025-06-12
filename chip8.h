@@ -2,21 +2,21 @@
 #define CHIP8
 
 #include <stdint.h>
-
-#define MEMSIZE 4096
-#define SC_WIDTH 64
-#define SC_HEIGHT 32
+#define MEMBITS 4096
+#define SCREEN_WIDTH 64
+#define SCREEN_HEIGHT 32
 
 // 8 bit memory array with 4096 allocated bits
-uint8_t memory[MEMSIZE];
+uint8_t memory[MEMBITS];
 
+// 16 bit variable register
 uint8_t v[16];
 
 // stack to handle 16 or 12-bit integers
 uint16_t stack[16];
 
 // graphics array hardcoded to chip-8 specifications
-uint8_t graphics[SC_WIDTH * SC_HEIGHT];
+uint8_t screen[SCREEN_WIDTH * SCREEN_HEIGHT];
 
 // 8-bit fontset (bytes)
 uint8_t fontset[80] = {
@@ -46,5 +46,10 @@ uint16_t pc;
 
 // 16-bit op code
 uint16_t opcode;
+
+uint8_t delay_timer;
+uint8_t sound_timer;
+
+uint8_t draw_flag;
 
 #endif

@@ -6,11 +6,11 @@ void init() {
     pc = 0x202;
     memcpy(memory, fontset, 80*sizeof(uint8_t));
     memset(stack, 0, 16);
-    memset(graphics, 0, SC_WIDTH * SC_HEIGHT);
+    memset(screen, 0, SCREEN_WIDTH * SCREEN_HEIGHT);
 }
 
 void clear_screen() {
-    memset(graphics, 0, SC_WIDTH * SC_HEIGHT);
+    memset(screen, 0, SCREEN_WIDTH * SCREEN_HEIGHT);
 }
 
 void mem_dump() {
@@ -57,16 +57,26 @@ int load_ROM(char *rom) {
 }
 
 void fetch() {
+    // get opcode at current program counter position in memory
     opcode = memory[pc] << 8 | memory[pc + 1];
     printf("opcode: 0x%x\n", opcode);
     pc += 2;
 }
 
-void draw(uint8_t x, uint8_t y, uint8_t n) {
+void draw() {
+    // TODO: Write code to draw to screen
+    if (draw_flag == 1) {
+        for (int i = 0; i < SCREEN_HEIGHT; i++) {
+            for (int j = 0; j < SCREEN_WIDTH; j++) {
+                printf("%d", screen[i * SCREEN_WIDTH + j]);
+            }
+            printf("\n");
+        }
+    }
     return;
 }
 
-void decode(uint8_t hByte, uint8_t lByte) {
+void decode() {
     uint8_t x = (opcode & 0x0F00) >> 8;
     uint8_t y = (opcode & 0x00F0) >> 4;
     uint8_t n = (opcode & 0x000F);
@@ -97,6 +107,24 @@ void decode(uint8_t hByte, uint8_t lByte) {
             break;
         case 0xD000:
             // draw instruction
+            uint16_t x_pos = v[x];
+            uint16_t y_pos = v[y];
+            uint16_t height = n;
+            uint8_t pixel;
+
+            v[0xF] = 0;
+            for (int i = 0; i < height; i++) {
+                pixel = memory[ir + i];
+                for (int j = 0; j < 8; j++) {
+                    if ((pixel & (0x80 >> j)) != 0) {
+                        if (screen[(x_pos + j + ((y_pos + i) * 64))] == 1) {
+                            v[0xF] = 1;
+                        }
+                        screen[x_pos + j + ((y_pos + i) * 64)] ^= 1;
+                    }
+                }
+            }
+            draw_flag = 1;
             break;
     }
 }
@@ -115,14 +143,19 @@ int main(int argc, char **argv) {
     init();
 
     // read ROM into chip-8 memory
-    if (load_ROM(argv[1]) == 0) {
-        return 1;
-    }
+    load_ROM(argv[1]);
     //mem_dump();
 
-    opcode = memory[pc] << 8 | memory[pc + 1];
+    int count = 0; 
+    while (count < 10) {
+        fetch();
+        decode();
+        execute();
+        draw();
+    }
+    //opcode = memory[pc] << 8 | memory[pc + 1];
     //decode(memory[pc], memory[pc + 1]);
-    mem_dump();
+    //mem_dump();
     return 0;
 }
 

@@ -18,13 +18,13 @@ void mem_dump() {
     uint16_t addr = 0x200;
     for (int i = 0; i < 16; i++) {
         uint16_t ascii = addr;
-        printf("0x%x ", addr);
+        printf("%#x ", addr);
         // print hex values
         for (int j = 0; j < 16; j++) {
             if (memory[addr] <= 0xF) {
                 printf("0");
             }
-            printf("%x ", memory[addr]);
+            printf("%#x ", memory[addr]);
             addr++;
         }
         for (int j = 0; j < 16; j++) {
@@ -135,8 +135,9 @@ void execute() {
 
 int main(int argc, char **argv) {
     if (argc < 2) {
-        printf("[ERROR] Usage: ./chip8 <input ROM path>\n");
-        return 0;
+        //printf("[ERROR] Usage: ./chip8 <input ROM path>\n");
+        fprintf(stderr, "[ERROR] Usage: ./chip8 <input ROM path>\n");
+        return 1;
     }
 
     // initialize memory 
@@ -147,11 +148,12 @@ int main(int argc, char **argv) {
     //mem_dump();
 
     int count = 0; 
-    while (count < 10) {
+    while (count < 20) {
         fetch();
         decode();
         execute();
         draw();
+        count++;
     }
     //opcode = memory[pc] << 8 | memory[pc + 1];
     //decode(memory[pc], memory[pc + 1]);
